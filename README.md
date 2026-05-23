@@ -1,40 +1,89 @@
-# Nanobridge — DeepSeek V4 Pro API Gateway
+# Nanobridge
 
-OpenAI-compatible inference gateway optimized for AI coding workflows.
+OpenAI-compatible AI inference gateway optimized for coding workflows and AI agents.
 
 Built for:
 - Cursor
 - Cline
-- Aider
 - Continue
-- AI agents
-- Coding copilots
+- Aider
+- AI coding assistants
+- Autonomous agents
 
 ---
 
-## Why Nanobridge?
+# Why Nanobridge?
 
-Most AI coding users care about:
+Modern AI coding workflows require:
 
-- Lower latency
-- Stable inference
-- Retry support
-- Better routing
-- Lower cost
+- stable inference
+- low latency
 - OpenAI compatibility
+- reliable streaming
+- long-context reasoning
+- affordable scaling
 
-Nanobridge is designed specifically for coding-oriented AI workloads.
+Nanobridge focuses specifically on practical AI coding reliability.
 
-### Features
+Built because many existing routing solutions are often:
+- unstable under load
+- expensive at scale
+- inconsistent for coding tasks
+- difficult to integrate
+
+---
+
+# Features
 
 - OpenAI-compatible API
-- Optimized for coding agents
-- Smart retry system
-- Fallback routing
-- Streaming support
-- Crypto payments
-- Low latency inference
 - DeepSeek V4 Pro support
+- Streaming support
+- Long-context reasoning
+- Coding-oriented inference routing
+- Retry optimization
+- Crypto payment support
+- AI agent compatibility
+
+---
+
+# Supported Models
+
+Currently available:
+
+- deepseek-v4-pro
+- deepseek-v3
+- deepseek-reasoner
+
+More models coming soon.
+
+---
+
+# Supported Tools
+
+Works with:
+
+- Cursor
+- Cline
+- Continue
+- Aider
+- OpenAI SDK
+- LangChain
+- LiteLLM
+- AI agents
+
+---
+
+# API Endpoint
+
+Base URL:
+
+``` id="j1k2vs"
+https://platform.nanobridge.net/v1
+```
+
+API Docs:
+
+https://platform.nanobridge.net/api-docs
 
 ---
 
@@ -42,7 +91,7 @@ Nanobridge is designed specifically for coding-oriented AI workloads.
 
 ## Python
 
-Install OpenAI SDK:
+Install SDK:
 
 ```bash
 pip install openai
@@ -55,7 +104,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://api.nanobridge.ai/v1"
+    base_url="https://platform.nanobridge.net/v1"
 )
 
 response = client.chat.completions.create(
@@ -63,9 +112,10 @@ response = client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "Write a Python fastapi example"
+            "content": "Write a FastAPI middleware example"
         }
-    ]
+    ],
+    stream=False
 )
 
 print(response.choices[0].message.content)
@@ -73,10 +123,10 @@ print(response.choices[0].message.content)
 
 ---
 
-## cURL
+# cURL Example
 
 ```bash
-curl https://api.nanobridge.ai/v1/chat/completions \
+curl https://platform.nanobridge.net/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -92,118 +142,201 @@ curl https://api.nanobridge.ai/v1/chat/completions \
 
 ---
 
-# Supported Tools
+# Cursor Setup
 
-Nanobridge works with:
+## Step 1 — Open Cursor Settings
 
-- Cursor
-- Cline
-- Aider
-- Continue
-- OpenAI SDK
-- LangChain
-- LiteLLM
-- AI agents
+Go to:
+
+``` id="x4sy9l"
+Cursor → Settings → Models
+```
+
+Enable:
+
+``` id="n5z8vd"
+OpenAI Compatible API
+```
 
 ---
 
-# Cursor Configuration
+## Step 2 — Configure API
 
-Open Cursor settings and configure:
+Use:
 
 ```json
 {
   "apiKey": "YOUR_API_KEY",
-  "baseURL": "https://api.nanobridge.ai/v1",
+  "baseURL": "https://platform.nanobridge.net/v1",
   "model": "deepseek-v4-pro"
 }
 ```
 
 ---
 
-# Why DeepSeek V4 Pro?
+# Recommended AI Coding Workflow
 
-DeepSeek V4 Pro offers strong coding and reasoning capabilities at significantly lower cost compared to many frontier models.
+DeepSeek V4 Pro works especially well for:
 
-Good for:
-- Coding agents
-- Refactoring
-- Tool calling
-- Multi-file edits
-- Long context workflows
-
----
-
-# Stability Optimizations
-
-Nanobridge includes:
-
-- Retry handling
-- Request routing
-- Streaming optimization
-- Reduced timeout issues
-- Coding-oriented inference tuning
-
-Designed to improve reliability for long coding sessions and agent workflows.
+- refactoring
+- bug fixing
+- code explanation
+- multi-file edits
+- long-context coding
+- reasoning-heavy workflows
+- autonomous coding agents
 
 ---
 
-# Benchmark
+# Streaming Support
 
-| Provider | Avg Latency | Retry | Streaming |
-|---|---|---|---|
-| Traditional Routing | 4.8s | No | Yes |
-| Nanobridge | 2.9s | Yes | Yes |
+Streaming is fully supported.
 
----
-
-# Pricing
-
-Competitive token pricing optimized for high-volume AI coding usage.
-
-Visit:
-https://www.nanobridge.ai
+Recommended for:
+- lower perceived latency
+- coding copilots
+- interactive workflows
+- long generations
 
 ---
 
-# API Compatibility
+# OpenAI Compatibility
 
 Nanobridge is designed to be drop-in compatible with OpenAI-style APIs.
 
 Supported:
 - /chat/completions
 - streaming
-- tool calling
 - system prompts
+- multi-turn conversations
+
+This makes integration easy with most modern AI developer tools.
 
 ---
 
-# Use Cases
+# Why Not Just Use OpenRouter?
 
-- AI coding assistants
-- Autonomous agents
-- IDE integrations
-- Multi-agent systems
-- AI SaaS products
-- Coding copilots
+Some developers prefer:
+
+- lower latency
+- coding-focused routing
+- simplified infrastructure
+- stable long-context workflows
+- direct DeepSeek optimization
+- crypto payment support
+
+Nanobridge focuses specifically on AI coding workloads and developer workflows.
 
 ---
 
-# Status
+# AI Agent Optimization
 
-Current uptime target:
+Optimized for:
+- coding agents
+- autonomous workflows
+- multi-step reasoning
+- tool-calling systems
+- development automation
 
-- 99.9% availability
+---
+
+# Example Prompt Ideas
+
+Try inside Cursor:
+
+``` id="m4yd1g"
+Refactor this codebase
+```
+
+``` id="a9x5vu"
+Find concurrency issues
+```
+
+``` id="p6w1qs"
+Optimize this SQL query
+```
+
+``` id="h7e4rz"
+Explain this architecture
+```
+
+---
+
+# Best Practices
+
+For best coding performance:
+
+- use focused prompts
+- split large tasks
+- restart long sessions periodically
+- prefer streaming mode
+- use explicit coding instructions
+
+---
+
+# Common Issues
+
+## Timeout Problems
+
+Possible causes:
+- overloaded providers
+- unstable routing
+- long reasoning chains
+
+Possible solutions:
+- retry requests
+- shorten prompts
+- restart conversation sessions
+
+---
+
+## Invalid Base URL
+
+Make sure the Base URL is:
+
+``` id="x9u5pk"
+https://platform.nanobridge.net/v1
+```
+
+NOT:
+
+``` id="q2h7nf"
+https://platform.nanobridge.net/api-docs
+```
+
+---
+
+# Performance Goals
+
+Current optimization targets:
+
+- lower latency
+- stable streaming
+- reliable coding workflows
+- reduced inference failures
+
+---
+
+# Current Status
+
+Project status:
+
+- Active development
+- Early production usage
+- API stability improvements ongoing
 
 ---
 
 # Roadmap
 
-- Additional routing strategies
-- Smarter fallback logic
-- Better agent optimization
-- Multi-provider balancing
-- Latency analytics
+Planned improvements:
+
+- smarter routing
+- fallback optimization
+- additional models
+- lower latency
+- enhanced AI agent support
+- coding workflow tuning
 
 ---
 
@@ -211,6 +344,12 @@ Current uptime target:
 
 Website:
 https://www.nanobridge.ai
+
+Platform:
+https://platform.nanobridge.net
+
+API Docs:
+https://platform.nanobridge.net/api-docs
 
 GitHub:
 https://github.com/nanobridgerafa
