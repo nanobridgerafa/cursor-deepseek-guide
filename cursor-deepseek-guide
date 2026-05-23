@@ -1,0 +1,313 @@
+# Cursor + DeepSeek V4 Pro Guide
+
+Use DeepSeek V4 Pro inside Cursor with OpenAI-compatible APIs.
+
+Built for AI coding workflows.
+
+---
+
+# Why Use DeepSeek With Cursor?
+
+AI coding users increasingly want:
+
+- Lower cost than Claude
+- Strong coding performance
+- OpenAI-compatible APIs
+- Better inference stability
+- Faster response times
+- Reliable long-context workflows
+
+DeepSeek V4 Pro is becoming a strong option for:
+- coding agents
+- refactoring
+- multi-file edits
+- reasoning-heavy tasks
+
+---
+
+# Features
+
+- OpenAI-compatible API
+- Cursor support
+- Streaming support
+- Long-context reasoning
+- AI coding optimized
+- Crypto payment support
+- Fast API integration
+
+---
+
+# Supported Tools
+
+Works with:
+
+- Cursor
+- Cline
+- Continue
+- Aider
+- OpenAI SDK
+- LangChain
+- LiteLLM
+
+---
+
+# API Endpoint
+
+Base URL:
+
+``` id="q6lf2n"
+https://platform.nanobridge.net/v1
+```
+
+API Documentation:
+
+https://platform.nanobridge.net/api-docs
+
+---
+
+# Quick Start
+
+## Python Example
+
+Install SDK:
+
+```bash
+pip install openai
+```
+
+Example:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://platform.nanobridge.net/v1"
+)
+
+response = client.chat.completions.create(
+    model="deepseek-v4-pro",
+    messages=[
+        {
+            "role": "user",
+            "content": "Write a FastAPI example"
+        }
+    ],
+    stream=False
+)
+
+print(response.choices[0].message.content)
+```
+
+---
+
+# cURL Example
+
+```bash
+curl https://platform.nanobridge.net/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "deepseek-v4-pro",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hello"
+      }
+    ]
+  }'
+```
+
+---
+
+# Cursor Setup
+
+## Step 1 — Open Cursor Settings
+
+Go to:
+
+``` id="5mjlwm"
+Cursor → Settings → Models
+```
+
+Enable:
+
+``` id="wfr13o"
+OpenAI Compatible API
+```
+
+---
+
+## Step 2 — Configure API
+
+Use:
+
+```json
+{
+  "apiKey": "YOUR_API_KEY",
+  "baseURL": "https://platform.nanobridge.net/v1",
+  "model": "deepseek-v4-pro"
+}
+```
+
+---
+
+# Recommended Cursor Workflow
+
+DeepSeek V4 Pro works especially well for:
+
+- code explanation
+- bug fixing
+- refactoring
+- long-context coding
+- reasoning-heavy tasks
+- multi-file edits
+
+---
+
+# Streaming Support
+
+Streaming is supported.
+
+Recommended for:
+- lower perceived latency
+- better coding interaction
+- long generations
+
+---
+
+# OpenAI Compatibility
+
+Compatible with OpenAI-style APIs.
+
+Supported:
+- /chat/completions
+- streaming
+- system prompts
+- multi-turn chat
+
+This makes integration easy with most AI developer tools.
+
+---
+
+# Example Prompt Ideas
+
+Try inside Cursor:
+
+``` id="n4a1zy"
+Refactor this code
+```
+
+``` id="m4h26x"
+Find potential bugs
+```
+
+``` id="f4rjmh"
+Optimize this SQL query
+```
+
+``` id="xktvva"
+Explain this function step-by-step
+```
+
+---
+
+# Performance Tips
+
+For better coding quality:
+
+- keep prompts clear
+- split large tasks
+- avoid extremely long sessions
+- use streaming mode
+- restart chats periodically
+
+---
+
+# Common Issues
+
+## Timeout Problems
+
+Possible causes:
+- overloaded providers
+- long reasoning chains
+- unstable routing
+
+Solutions:
+- retry requests
+- shorten prompts
+- restart conversation
+
+---
+
+## Invalid Base URL
+
+Make sure the Base URL is:
+
+``` id="ikbn4k"
+https://platform.nanobridge.net/v1
+```
+
+NOT:
+
+``` id="ixf7l5"
+https://platform.nanobridge.net/api-docs
+```
+
+---
+
+# Why OpenAI-Compatible APIs Matter
+
+Most modern AI developer tools already support OpenAI APIs.
+
+This means you can easily integrate:
+- Cursor
+- Cline
+- Continue
+- Aider
+- AI agents
+- LangChain apps
+
+without changing your workflow.
+
+---
+
+# Use Cases
+
+Good for:
+- AI coding assistants
+- coding agents
+- autonomous workflows
+- AI SaaS products
+- IDE copilots
+- development automation
+
+---
+
+# Roadmap
+
+Planned improvements:
+- smarter routing
+- retry optimization
+- lower latency
+- additional models
+- coding-agent tuning
+
+---
+
+# Community
+
+Website:
+https://www.nanobridge.ai
+
+API Docs:
+https://platform.nanobridge.net/api-docs
+
+GitHub:
+https://github.com/nanobridgerafa
+
+---
+
+# Disclaimer
+
+This project is independent and not affiliated with OpenAI or DeepSeek.
