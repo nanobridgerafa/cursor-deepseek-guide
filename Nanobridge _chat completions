@@ -1,0 +1,51 @@
+Chat Completions (OpenAI protocol)
+
+POST /chat/completions or POST /v1/chat/completions
+
+Request and response fields are OpenAI Chat Completions compatible. Common parameters:
+
+Field	Type	Description
+model	string	Model ID—see Supported models; default tier is deepseek-v4-flash
+messages	array	Array of messages (required), each with role and content
+stream	boolean	Whether to stream; default false
+temperature	number	temperature: sampling temperature (optional)
+max_tokens	integer	max_tokens: max tokens to generate (optional)
+Non-streaming response (OpenAI shape):
+
+{
+  "id": "chatcmpl-xxx",
+  "object": "chat.completion",
+  "choices": [{
+    "index": 0,
+    "message": { "role": "assistant", "content": "..." },
+    "finish_reason": "stop"
+  }],
+  "usage": {
+    "prompt_tokens": 12,
+    "completion_tokens": 8,
+    "total_tokens": 20
+  }
+}
+Messages (Anthropic protocol)
+
+POST /v1/messages (full URL with Anthropic base: https://api.nanobridge.net/anthropic/v1/messages). On the OpenAI base host you may also use POST /anthropic/v1/messages.
+
+Requests and responses follow the Anthropic Messages API. The gateway translates to Chat Completions upstream while staying Anthropic-compatible on the wire.
+
+Authorization: Bearer <API_KEY>, or X-Api-Key: <API_KEY> (same as OpenAI).
+
+Field	Type	Description
+model	string	Model ID—see Supported models; default tier is deepseek-v4-flash
+messages	array	messages (required); system may be a separate field or inside messages
+max_tokens	integer	max_tokens: max reply length (usually required by Anthropic clients)
+stream	boolean	Whether to stream; default false
+With stream: true, the response is Anthropic-style text/event-stream (SSE).
+
+curl https://api.nanobridge.net/anthropic/v1/messages \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_API_KEY>" \
+  -d '{
+        "model": "deepseek-v4-flash",
+        "max_tokens": 1024,
+        "messages": [{"role": "user", "content": "Hello!"}]
+      }'
