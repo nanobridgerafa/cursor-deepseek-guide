@@ -1,36 +1,32 @@
-# Nanobridge
+# Use DeepSeek V4 Pro in Cursor (OpenAI Compatible Setup)
 
-OpenAI-compatible AI inference gateway optimized for coding workflows and AI agents.
+Run DeepSeek inside Cursor in 2 minutes.
 
-Built for:
-- Cursor
-- Cline
-- Continue
-- Aider
-- AI coding assistants
-- Autonomous agents
+No proxy setup. No confusion. Just working config.
 
 ---
 
-# Why Nanobridge?
+## ⚡ What this solves
 
-Modern AI coding workflows require:
+- Cursor setup fails with DeepSeek
+- OpenAI-compatible API confusion
+- Wrong base URL / model issues
+- Slow or broken integrations
 
-- stable inference
-- low latency
-- OpenAI compatibility
-- reliable streaming
-- long-context reasoning
-- affordable scaling
+This repo gives you a clean working setup.
 
-Nanobridge focuses specifically on practical AI coding reliability.
+---
 
-Built because many existing routing solutions are often:
-- unstable under load
-- expensive at scale
-- inconsistent for coding tasks
-- difficult to integrate
+## 🚀 Quick Start
 
+### 1. Cursor Config
+
+```json
+{
+  "apiKey": "YOUR_API_KEY",
+  "baseURL": "https://platform.nanobridge.net/v1",
+  "model": "deepseek-v4-pro"
+}
 ---
 
 # Features
