@@ -1,11 +1,45 @@
-# Use DeepSeek V4 Pro in Cursor (OpenAI Compatible Setup)
+# NanoBridge
 
-Run DeepSeek inside Cursor in 2 minutes.
+OpenAI-compatible retry and fallback gateway for Claude Code and AI agent workloads.
 
-No proxy setup. No confusion. Just working config.
+Built for developers dealing with:
+- unstable AI providers
+- model timeouts
+- provider failover
+- coding workload spikes
+- token cost optimization
+- multi-provider routing
 
 ---
+## Features
 
+- OpenAI-compatible API endpoint
+- Automatic retry handling
+- Smart fallback routing
+- Multi-provider failover
+- Claude Code friendly
+- Lightweight proxy architecture
+- Fast integration with existing tools
+
+## Use Cases
+
+- Reduce downtime during provider overload
+- Route requests across multiple AI APIs
+- Improve coding workflow stability
+- Lower AI coding costs with smart routing
+- Add fallback support for AI agents
+
+## Works With
+
+- Claude Code
+- OpenAI SDK
+- Cursor
+- Cline
+- Roo Code
+- Continue
+- AI agent frameworks
+- MCP workflows
+- 
 ## ⚡ What this solves
 
 - Cursor setup fails with DeepSeek
