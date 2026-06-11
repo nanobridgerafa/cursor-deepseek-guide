@@ -1,33 +1,62 @@
-# DeepSeek V4 Pro & V3 API Access (USDT/Crypto Supported)
+# Nanobridge Overview
 
-Fast, reliable, and privacy-focused API gateway for the latest DeepSeek models. Designed for developers who need stable access without credit card restrictions.
+OpenAI- and Anthropic-compatible API gateway for developers. Routes to DeepSeek, GLM, MiniMax, and other models on Tencent Hunyuan backends.
 
-## 🚀 Why Nanobridge?
+---
 
-* **No Credit Card Required**: We solve the "Stripe decline" headache. 
-* **Crypto Native**: Native support for **USDT (BSC/BEP20)** and other cryptocurrencies.
-* **High Performance**: Optimized for low latency (TTFT) with dedicated clusters for DeepSeek V4 Pro.
-* **OpenAI Compatible**: Seamless integration with your existing apps. Just change the `base_url`.
+## Why Nanobridge
 
-## 💰 Transparent Pricing
+- **OpenAI compatible**: change `base_url` and `model` in existing apps
+- **Multi-region gateways**: Germany, Singapore, United States—one API key
+- **Coding workloads**: retry, routing, and agent toolchains
+- **Flexible billing**: top up in the console; crypto and other payment options (see console)
+- **No credit-card barrier**: useful when international cards are declined
 
-| Model | Input (per 1M tokens) | Output (per 1M tokens) |
-| :--- | :--- | :--- |
-| **DeepSeek V3** | $0.20 | $0.36 |
-| **DeepSeek V4 Pro** | $1.28 | $3.00 |
+---
 
-## 🛠️ Quick Start (Python)
+## Gateway vs console
+
+| Purpose | Host |
+|---------|------|
+| Sign-up, keys, billing, docs | `https://platform.nanobridge.net` |
+| **Inference API** | `https://api.nanobridge.net` (and `api-sg`, `api-us`) |
+
+Never use `platform.nanobridge.net` as the Chat Completions base URL.
+
+---
+
+## Pricing
+
+Rates are shown in the console under **Pricing / model catalog** and may change with upstream pricing:
+
+https://platform.nanobridge.net
+
+Token usage and credit deductions in docs and billing follow the console as the source of truth.
+
+---
+
+## Quick start (Python)
 
 ```python
-import openai
+from openai import OpenAI
 
-client = openai.OpenAI(
+client = OpenAI(
     api_key="YOUR_NANOBRIDGE_KEY",
-    base_url="[https://api.nanobridge.net/v1](https://api.nanobridge.net/v1)"
+    base_url="https://api.nanobridge.net/v1",
 )
 
 response = client.chat.completions.create(
-    model="deepseek-v4-pro",
-    messages=[{"role": "user", "content": "Hello!"}]
+    model="deepseek-v4-flash",
+    messages=[{"role": "user", "content": "Hello!"}],
 )
 print(response.choices[0].message.content)
+```
+
+---
+
+## Links
+
+- Website: https://www.nanobridge.ai
+- Console: https://platform.nanobridge.net
+- API docs: https://platform.nanobridge.net/#/api-docs
+- Cursor setup: [cursor-deepseek-guide.md](./cursor-deepseek-guide.md)

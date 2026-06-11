@@ -1,391 +1,204 @@
-# NanoBridge
+# NanoBridge — Cursor & DeepSeek Integration Guide
 
-OpenAI-compatible retry and fallback gateway for Claude Code and AI agent workloads.
+OpenAI-compatible retry and failover gateway for Cursor, Claude Code, and AI coding agents.
 
-Built for developers dealing with:
-- unstable AI providers
-- model timeouts
-- provider failover
-- coding workload spikes
-- token cost optimization
-- multi-provider routing
-
----
-## Features
-
-- OpenAI-compatible API endpoint
-- Automatic retry handling
-- Smart fallback routing
-- Multi-provider failover
-- Claude Code friendly
-- Lightweight proxy architecture
-- Fast integration with existing tools
-
-## Use Cases
-
-- Reduce downtime during provider overload
-- Route requests across multiple AI APIs
-- Improve coding workflow stability
-- Lower AI coding costs with smart routing
-- Add fallback support for AI agents
-
-## Works With
-
-- Claude Code
-- OpenAI SDK
-- Cursor
-- Cline
-- Roo Code
-- Continue
-- AI agent frameworks
-- MCP workflows
-- 
-## ⚡ What this solves
-
-- Cursor setup fails with DeepSeek
-- OpenAI-compatible API confusion
-- Wrong base URL / model issues
-- Slow or broken integrations
-
-This repo gives you a clean working setup.
+Built for developers dealing with unstable upstream providers, timeouts, multi-provider routing, coding workload spikes, and cost optimization.
 
 ---
 
-## 🚀 Quick Start
+## What this repo solves
 
-### 1. Cursor Config
+- Wrong Base URL or model name when configuring DeepSeek in Cursor
+- Using the console host `platform.nanobridge.net` as the API endpoint
+- Confusing OpenAI-compatible APIs with Anthropic Messages endpoints
+- Not knowing which model or regional node to pick
+
+---
+
+## Quick Start (Cursor)
+
+### 1. Get an API key
+
+Sign up and create an API key in the [Nanobridge console](https://platform.nanobridge.net).
+
+### 2. Pick a regional Base URL
+
+**API requests go to the gateway hosts** (not the console):
+
+| Region | OpenAI Base (use in Cursor, includes `/v1`) | Anthropic Base (Cline / Claude Code, etc.) |
+|--------|---------------------------------------------|--------------------------------------------|
+| Germany (default) | `https://api.nanobridge.net/v1` | `https://api.nanobridge.net/anthropic` |
+| Singapore | `https://api-sg.nanobridge.net/v1` | `https://api-sg.nanobridge.net/anthropic` |
+| United States | `https://api-us.nanobridge.net/v1` | `https://api-us.nanobridge.net/anthropic` |
+
+The same API key works across regions. Pick the node closest to you for lower latency.
+
+### 3. Cursor settings
+
+1. Open **Cursor → Settings → Models**
+2. Enable **Override OpenAI Base URL** (or a similar “OpenAI Compatible API” option)
+3. Use:
 
 ```json
 {
   "apiKey": "YOUR_API_KEY",
-  "baseURL": "https://platform.nanobridge.net/v1",
-  "model": "deepseek-v4-pro"
+  "baseURL": "https://api.nanobridge.net/v1",
+  "model": "deepseek-v4-flash"
 }
----
-
-# Features
-
-- OpenAI-compatible API
-- DeepSeek V4 Pro support
-- Streaming support
-- Long-context reasoning
-- Coding-oriented inference routing
-- Retry optimization
-- Crypto payment support
-- AI agent compatibility
-
----
-
-# Supported Models
-
-Currently available:
-
-- deepseek-v4-pro
-- deepseek-v3
-- deepseek-reasoner
-
-More models coming soon.
-
----
-
-# Supported Tools
-
-Works with:
-
-- Cursor
-- Cline
-- Continue
-- Aider
-- OpenAI SDK
-- LangChain
-- LiteLLM
-- AI agents
-
----
-
-# API Endpoint
-
-Base URL:
-
-``` id="j1k2vs"
-https://platform.nanobridge.net/v1
 ```
 
-API Docs:
+The recommended default model is `deepseek-v4-flash` (balanced cost and latency). Use `deepseek-v4-pro` for stronger reasoning.
 
-https://platform.nanobridge.net/api-docs
+> Note: Some Cursor features may still use built-in channels. The OpenAI override mainly applies to Chat / Composer and other compatible paths—verify with a real request.
+
+Generate config with: `python generate_config.py`
 
 ---
 
-# Quick Start
+## Supported models
 
-## Python
+Use these IDs in the request `model` field (matches the console gateway catalog):
 
-Install SDK:
+| Model ID | Notes |
+|----------|-------|
+| `deepseek-v4-flash` | **Recommended default** |
+| `deepseek-v4-pro` | Stronger reasoning |
+| `deepseek-v3.2` | DeepSeek V3.2 |
+| `glm-5.1` | Alias: `glm-5-1` |
+| `minimax-m2.7` | Alias: `minimax-m-2-7` |
+
+---
+
+## API endpoints
+
+- **OpenAI Chat Completions**: `POST /v1/chat/completions` (or `POST /chat/completions`)
+- **Model list**: `GET /v1/models`
+- **Anthropic Messages**: `POST /v1/messages` (Anthropic base from the table above)
+- **Streaming**: set `stream: true` in the request body; response is SSE
+- **Auth**: `Authorization: Bearer <API_KEY>`
+
+Full parameters and examples: [chat-completions.md](./chat-completions.md)
+
+Official API docs: [platform.nanobridge.net/#/api-docs](https://platform.nanobridge.net/#/api-docs)
+
+---
+
+## Python (OpenAI SDK)
 
 ```bash
 pip install openai
 ```
-
-Example:
 
 ```python
 from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://platform.nanobridge.net/v1"
+    base_url="https://api.nanobridge.net/v1",
 )
 
 response = client.chat.completions.create(
-    model="deepseek-v4-pro",
-    messages=[
-        {
-            "role": "user",
-            "content": "Write a FastAPI middleware example"
-        }
-    ],
-    stream=False
+    model="deepseek-v4-flash",
+    messages=[{"role": "user", "content": "Write a FastAPI middleware example"}],
 )
+print(response.choices[0].message.content)
+```
 
+For Singapore, change `base_url` to `https://api-sg.nanobridge.net/v1`.
+
+---
+
+## cURL
+
+```bash
+curl https://api.nanobridge.net/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "deepseek-v4-flash",
+    "messages": [{"role": "user", "content": "hello"}]
+  }'
+```
+
+More examples: [api-key-example.sh](./api-key-example.sh)
+
+---
+
+## LiteLLM
+
+```bash
+export NANOBRIDGE_API_KEY="your-api-key"
+# optional: export NANOBRIDGE_API_BASE="https://api-sg.nanobridge.net/v1"
+```
+
+```python
+import litellm
+
+response = litellm.completion(
+    model="nanobridge/deepseek-v4-flash",
+    messages=[{"role": "user", "content": "Hello"}],
+)
 print(response.choices[0].message.content)
 ```
 
 ---
 
-# cURL Example
+## Compatible tools
 
-```bash
-curl https://platform.nanobridge.net/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -d '{
-    "model": "deepseek-v4-pro",
-    "messages": [
-      {
-        "role": "user",
-        "content": "hello"
-      }
-    ]
-  }'
-```
+| Tool | Protocol | Configuration |
+|------|----------|---------------|
+| Cursor | OpenAI | Base = `https://api*.nanobridge.net/v1` |
+| Claude Code | Anthropic | `ANTHROPIC_BASE_URL` = Anthropic base |
+| Cline / Roo Code / Kilo | Anthropic | Provider = Anthropic, model `deepseek-v4-flash` |
+| Continue / Aider | OpenAI | Same OpenAI base as above |
+| OpenAI SDK / LangChain | OpenAI | `base_url` + `api_key` |
+
+Portal integrations: [platform.nanobridge.net](https://platform.nanobridge.net) → Integrations.
 
 ---
 
-# Cursor Setup
+## FAQ
 
-## Step 1 — Open Cursor Settings
+### Timeouts
 
-Go to:
+Possible causes: upstream overload, long reasoning chains, network jitter. Shorten prompts, enable streaming, switch to a closer region, or retry.
 
-``` id="x4sy9l"
-Cursor → Settings → Models
-```
+### Wrong Base URL
 
-Enable:
+| Correct (gateway) | Wrong |
+|-------------------|-------|
+| `https://api.nanobridge.net/v1` | `https://platform.nanobridge.net/v1` |
+| | `https://platform.nanobridge.net/api-docs` |
 
-``` id="n5z8vd"
-OpenAI Compatible API
-```
+`platform.nanobridge.net` is the **console and documentation**—it does not serve Chat Completions inference.
 
----
+### Model not found
 
-## Step 2 — Configure API
-
-Use:
-
-```json
-{
-  "apiKey": "YOUR_API_KEY",
-  "baseURL": "https://platform.nanobridge.net/v1",
-  "model": "deepseek-v4-pro"
-}
-```
+Do not use retired or unavailable names (e.g. `deepseek-v3`, `deepseek-reasoner`). Use the model list in the console.
 
 ---
 
-# Recommended AI Coding Workflow
+## Repository files
 
-DeepSeek V4 Pro works especially well for:
-
-- refactoring
-- bug fixing
-- code explanation
-- multi-file edits
-- long-context coding
-- reasoning-heavy workflows
-- autonomous coding agents
+| File | Description |
+|------|-------------|
+| [cursor-deepseek-guide.md](./cursor-deepseek-guide.md) | Cursor + DeepSeek focused guide |
+| [generate_config.py](./generate_config.py) | Interactive Cursor config generator |
+| [chat-completions.md](./chat-completions.md) | Chat / Messages API reference |
+| [api-key-example.sh](./api-key-example.sh) | cURL examples |
+| [nanobridge-overview.md](./nanobridge-overview.md) | Product overview and pricing |
 
 ---
 
-# Streaming Support
+## Links
 
-Streaming is fully supported.
-
-Recommended for:
-- lower perceived latency
-- coding copilots
-- interactive workflows
-- long generations
+- Website: https://www.nanobridge.ai
+- Console: https://platform.nanobridge.net
+- API docs: https://platform.nanobridge.net/#/api-docs
+- GitHub: https://github.com/nanobridgerafa
 
 ---
 
-# OpenAI Compatibility
+## Disclaimer
 
-Nanobridge is designed to be drop-in compatible with OpenAI-style APIs.
-
-Supported:
-- /chat/completions
-- streaming
-- system prompts
-- multi-turn conversations
-
-This makes integration easy with most modern AI developer tools.
-
----
-
-# Why Not Just Use OpenRouter?
-
-Some developers prefer:
-
-- lower latency
-- coding-focused routing
-- simplified infrastructure
-- stable long-context workflows
-- direct DeepSeek optimization
-- crypto payment support
-
-Nanobridge focuses specifically on AI coding workloads and developer workflows.
-
----
-
-# AI Agent Optimization
-
-Optimized for:
-- coding agents
-- autonomous workflows
-- multi-step reasoning
-- tool-calling systems
-- development automation
-
----
-
-# Example Prompt Ideas
-
-Try inside Cursor:
-
-``` id="m4yd1g"
-Refactor this codebase
-```
-
-``` id="a9x5vu"
-Find concurrency issues
-```
-
-``` id="p6w1qs"
-Optimize this SQL query
-```
-
-``` id="h7e4rz"
-Explain this architecture
-```
-
----
-
-# Best Practices
-
-For best coding performance:
-
-- use focused prompts
-- split large tasks
-- restart long sessions periodically
-- prefer streaming mode
-- use explicit coding instructions
-
----
-
-# Common Issues
-
-## Timeout Problems
-
-Possible causes:
-- overloaded providers
-- unstable routing
-- long reasoning chains
-
-Possible solutions:
-- retry requests
-- shorten prompts
-- restart conversation sessions
-
----
-
-## Invalid Base URL
-
-Make sure the Base URL is:
-
-``` id="x9u5pk"
-https://platform.nanobridge.net/v1
-```
-
-NOT:
-
-``` id="q2h7nf"
-https://platform.nanobridge.net/api-docs
-```
-
----
-
-# Performance Goals
-
-Current optimization targets:
-
-- lower latency
-- stable streaming
-- reliable coding workflows
-- reduced inference failures
-
----
-
-# Current Status
-
-Project status:
-
-- Active development
-- Early production usage
-- API stability improvements ongoing
-
----
-
-# Roadmap
-
-Planned improvements:
-
-- smarter routing
-- fallback optimization
-- additional models
-- lower latency
-- enhanced AI agent support
-- coding workflow tuning
-
----
-
-# Community
-
-Website:
-https://www.nanobridge.ai
-
-Platform:
-https://platform.nanobridge.net
-
-API Docs:
-https://platform.nanobridge.net/api-docs
-
-GitHub:
-https://github.com/nanobridgerafa
-
----
-
-# Disclaimer
-
-Nanobridge is an independent inference gateway project and is not affiliated with OpenAI or DeepSeek.
+Nanobridge is an independent inference gateway and is not affiliated with OpenAI or DeepSeek.

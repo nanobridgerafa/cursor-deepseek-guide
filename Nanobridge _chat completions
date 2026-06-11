@@ -1,17 +1,30 @@
-Chat Completions (OpenAI protocol)
+# Chat Completions & Messages API
 
-POST /chat/completions or POST /v1/chat/completions
+Nanobridge exposes both OpenAI Chat Completions and Anthropic Messages. Upstream traffic is routed to Tencent Hunyuan model backends.
 
-Request and response fields are OpenAI Chat Completions compatible. Common parameters:
+---
 
-Field	Type	Description
-model	string	Model ID—see Supported models; default tier is deepseek-v4-flash
-messages	array	Array of messages (required), each with role and content
-stream	boolean	Whether to stream; default false
-temperature	number	temperature: sampling temperature (optional)
-max_tokens	integer	max_tokens: max tokens to generate (optional)
-Non-streaming response (OpenAI shape):
+## OpenAI — Chat Completions
 
+**Path**: `POST /chat/completions` or `POST /v1/chat/completions`
+
+**Example base URL**: `https://api.nanobridge.net/v1`
+
+**Auth**: `Authorization: Bearer <API_KEY>`
+
+### Common request fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `model` | string | Model ID; default recommendation is `deepseek-v4-flash` |
+| `messages` | array | Message list (required); each item has `role` and `content` |
+| `stream` | boolean | Enable streaming; default `false` |
+| `temperature` | number | Sampling temperature (optional) |
+| `max_tokens` | integer | Max tokens to generate (optional) |
+
+### Non-streaming response (OpenAI shape)
+
+```json
 {
   "id": "chatcmpl-xxx",
   "object": "chat.completion",
@@ -26,26 +39,78 @@ Non-streaming response (OpenAI shape):
     "total_tokens": 20
   }
 }
-Messages (Anthropic protocol)
+```
 
-POST /v1/messages (full URL with Anthropic base: https://api.nanobridge.net/anthropic/v1/messages). On the OpenAI base host you may also use POST /anthropic/v1/messages.
+### cURL
 
-Requests and responses follow the Anthropic Messages API. The gateway translates to Chat Completions upstream while staying Anthropic-compatible on the wire.
+```bash
+curl https://api.nanobridge.net/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "deepseek-v4-flash",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
 
-Authorization: Bearer <API_KEY>, or X-Api-Key: <API_KEY> (same as OpenAI).
+### Streaming
 
-Field	Type	Description
-model	string	Model ID—see Supported models; default tier is deepseek-v4-flash
-messages	array	messages (required); system may be a separate field or inside messages
-max_tokens	integer	max_tokens: max reply length (usually required by Anthropic clients)
-stream	boolean	Whether to stream; default false
-With stream: true, the response is Anthropic-style text/event-stream (SSE).
+Set `"stream": true`. The response is OpenAI-style SSE.
 
+---
+
+## Anthropic — Messages
+
+**Path**: `POST /v1/messages`
+
+**Example base URL**: `https://api.nanobridge.net/anthropic`
+
+On the OpenAI host you can also call `POST /anthropic/v1/messages` (full URL: `https://api.nanobridge.net/anthropic/v1/messages`).
+
+The gateway speaks Anthropic Messages on the wire and translates to upstream Chat Completions internally.
+
+**Auth**: `Authorization: Bearer <API_KEY>` or `X-Api-Key: <API_KEY>`
+
+### Common request fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `model` | string | Model ID; recommended `deepseek-v4-flash` |
+| `messages` | array | Messages (required); `system` may be a separate field or inside `messages` |
+| `max_tokens` | integer | Max reply length (required by most Anthropic clients) |
+| `stream` | boolean | Enable streaming; default `false` |
+
+With `stream: true`, the response is Anthropic-style `text/event-stream` (SSE).
+
+### cURL
+
+```bash
 curl https://api.nanobridge.net/anthropic/v1/messages \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <YOUR_API_KEY>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-        "model": "deepseek-v4-flash",
-        "max_tokens": 1024,
-        "messages": [{"role": "user", "content": "Hello!"}]
-      }'
+    "model": "deepseek-v4-flash",
+    "max_tokens": 1024,
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+---
+
+## Regional endpoints
+
+| Region | OpenAI Base | Anthropic Base |
+|--------|-------------|----------------|
+| Germany | `https://api.nanobridge.net/v1` | `https://api.nanobridge.net/anthropic` |
+| Singapore | `https://api-sg.nanobridge.net/v1` | `https://api-sg.nanobridge.net/anthropic` |
+| United States | `https://api-us.nanobridge.net/v1` | `https://api-us.nanobridge.net/anthropic` |
+
+---
+
+## Supported model IDs
+
+- `deepseek-v4-flash` (recommended default)
+- `deepseek-v4-pro`
+- `deepseek-v3.2`
+- `glm-5.1` (alias `glm-5-1`)
+- `minimax-m2.7` (alias `minimax-m-2-7`)
